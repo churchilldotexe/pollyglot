@@ -1,6 +1,7 @@
 "use server";
 
 import { z } from "zod";
+import { env } from "~/env";
 
 const formSchema = z.object({
   userInput: z.string(),
@@ -36,7 +37,7 @@ export async function translationData(
   const { language, userInput } = formResult.data;
   try {
     const response = await fetch(
-      `http://localhost:3000/api/?q=${userInput}&lang=${language}`,
+      `${env.NEXT_PUBLIC_SERVER_URL}api/?q=${userInput}&lang=${language}`,
     );
     const data = (await response.json()) as unknown;
 
