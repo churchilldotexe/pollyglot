@@ -17,6 +17,11 @@ type TranslationResponse = {
   }[];
 };
 
+interface ResponseData {
+  role: string;
+  content: string;
+}
+
 export async function translationData(
   prevConversation: unknown,
   formData: FormData,
@@ -30,19 +35,18 @@ export async function translationData(
 
   const { language, userInput } = formResult.data;
   try {
-    const response = await fetch("/api");
+    const response = await fetch(
+      `http://localhost:3000/api/?q=${userInput}&lang=${language}`,
+    );
     const data = (await response.json()) as unknown;
 
-    const translationResponse = data as {
-      assistant: string;
-      user: string;
-    };
+    const translationResponse = data as ResponseData;
 
     return {
       response: [
         {
-          assistant: translationResponse.assistant,
-          user: translationResponse.user,
+          assistant: translationResponse.content,
+          user: userInput,
           id: crypto.randomUUID(),
         },
       ],
